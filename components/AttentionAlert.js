@@ -2,8 +2,8 @@ import React from "react";
 
 const AttentionAlert3 = ({ text }) => {
   return (
-    <div className="py-10  bg:dark">
-      <div className="container  flex justify-center text-nowrap">
+    <div className=" absolute left-[40%] top-0 z-10 ">
+      <div className="container flex justify-center text-nowrap">
         <div className="border-l-yellow dark:bg-dark-2 flex max-w-[655px] items-center rounded-md border-l-[6px] bg-white p-5 pl-6 ">
           <div className="bg-yellow mr-5 flex h-[36px] w-full max-w-[36px] items-center justify-center rounded-full">
             <svg

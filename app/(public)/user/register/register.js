@@ -1,58 +1,65 @@
 "use client";
-import React from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { auth } from "../../../lib/firebase";
-
+import { useState } from "react";
 import {
-  signInWithEmailAndPassword,
-  setPersistence,
-  browserSessionPersistence,
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signOut,
 } from "firebase/auth";
+import { useAuth } from "@/app/lib/AuthContext";
 import AttentionAlert3 from "@/components/AttentionAlert";
+import { useRouter } from "next/navigation";
 
-export default function SignIn() {
-  const params = useSearchParams();
+export default function Register() {
+  const [registerError, setRegisterError] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    secondPassword: "",
+  });
+  const { user } = useAuth();
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = React.useState(null);
-  const returnUrl = params.get("returnUrl") || "/";
+
+  if (user) return null;
+
+  const auth = getAuth();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const onSubmit = async (e) => {
-    e.preventDefault();
-    setErrorMessage(null);
+    e.preventDefault(); // Prevent form from submitting normally
 
-    try {
-      const email = e.target["email"].value;
-      const password = e.target["password"].value;
+    if (formData.password === formData.secondPassword) {
+      try {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          formData.email,
+          formData.password
+        );
+        console.log("User registered!", userCredential.user);
 
-      await setPersistence(auth, browserSessionPersistence);
-
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      if (returnUrl) {
-        router.push(returnUrl);
-      } else {
-        router.push("/"); // Przekierowanie do strony głównej
+        await sendEmailVerification(auth.currentUser);
+        console.log("Email verification sent!");
+        router.push("/user/verify");
+      } catch (error) {
+        setRegisterError(error.message);
+        console.error(error);
       }
-    } catch (error) {
-      console.error("Error:", error.code, error.message);
-      // Obsługa konkretnych błędów
-      switch (error.code) {
-        case "auth/invalid-credential":
-          setErrorMessage("Nieprawidłowe dane logowania");
-          break;
-        default:
-          setErrorMessage("Wystąpił błąd podczas logowania");
-      }
+    } else {
+      setRegisterError("Passwords don't match");
     }
   };
+
   return (
     <section className="bg-gray-1 py-20 dark:bg-dark lg:py-[120px]">
       <div className="container mx-auto">
-        \{errorMessage && <AttentionAlert3 text={errorMessage} />}
+        {registerError && <AttentionAlert3 text={registerError} />}
         <div className="-mx-4 flex flex-wrap">
           <div className="w-full px-4">
             <div className="relative mx-auto max-w-[525px] overflow-hidden rounded-lg bg-white px-10 py-16 text-center dark:bg-dark-2 sm:px-12 md:px-[60px]">
@@ -65,21 +72,35 @@ export default function SignIn() {
                 </a>
               </div>
               <form onSubmit={onSubmit}>
-                <InputBox type="email" name="email" placeholder="Email" />
+                <InputBox
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  onChange={handleInputChange}
+                />
                 <InputBox
                   type="password"
                   name="password"
                   placeholder="Password"
+                  onChange={handleInputChange}
+                />
+                <InputBox
+                  type="password"
+                  name="secondPassword"
+                  placeholder="Rewrite Password"
+                  onChange={handleInputChange}
                 />
                 <div className="mb-10">
                   <input
                     type="submit"
-                    value="Sign In"
+                    value="Register"
                     className="w-full cursor-pointer rounded-md border border-primary bg-primary px-5 py-3 text-base font-medium text-black  hover:bg-opacity-90 hover:text-white transition-all duration-200 hover:bg-slate-800 hover:font-bold"
                   />
                 </div>
               </form>
-              <p className="mb-6 text-base text-gray-500 ">Connect With</p>
+              <p className="mb-6 text-base text-secondary-color dark:text-dark-7">
+                Connect With
+              </p>
               <ul className="-mx-2 mb-12 flex justify-between">
                 <li className="w-full px-2">
                   <a
@@ -139,21 +160,6 @@ export default function SignIn() {
                   </a>
                 </li>
               </ul>
-              <a
-                href="/#"
-                className="mb-2 inline-block text-base text-dark hover:text-primary hover:underline dark:text-black"
-              >
-                Forget Password?
-              </a>
-              <p className="text-base text-gray-500 dark:text-dark-6">
-                <span className="pr-0.5">Not a member yet?</span>
-                <a
-                  href="/user/register"
-                  className="text-primary hover:underline"
-                >
-                  Sign Up
-                </a>
-              </p>
 
               <div>
                 <span className="absolute right-1 top-1">
@@ -380,14 +386,14 @@ export default function SignIn() {
     </section>
   );
 }
-
-const InputBox = ({ type, placeholder, name }) => {
+const InputBox = ({ type, placeholder, name, onChange }) => {
   return (
     <div className="mb-6">
       <input
         type={type}
         placeholder={placeholder}
         name={name}
+        onChange={onChange}
         className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-base text-body-color outline-none focus:border-primary focus-visible:shadow-none dark:border-dark-3 dark:text-black"
       />
     </div>

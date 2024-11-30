@@ -6,14 +6,18 @@ import { usePathname } from "next/navigation";
 import Navbar from "@/components/NavBar";
 
 function Protected({ children }) {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const returnUrl = usePathname();
 
   useLayoutEffect(() => {
-    if (!user) {
+    if (!loading && !user) {
       redirect(`/user/signin?returnUrl=${returnUrl}`);
     }
-  }, [user, returnUrl]);
+  }, [user, returnUrl, loading]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
