@@ -1,6 +1,6 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
-
+import { getFirestore } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
   authDomain: "projekt-8b410.firebaseapp.com",
@@ -15,4 +15,16 @@ let firebase_app =
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
 export const auth = getAuth(firebase_app);
+export const db = getFirestore(firebase_app);
 export default firebase_app;
+
+// rules_version = '2';
+
+// service cloud.firestore {
+//   match /databases/{database}/documents {
+//     match /{document=**} {
+//       allow read, write: if
+//           request.time < timestamp.date(2025, 1, 3);
+//     }
+//   }
+// }
