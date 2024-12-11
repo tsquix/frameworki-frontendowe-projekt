@@ -17,6 +17,8 @@
     "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.1",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
     "postcss": "^8",

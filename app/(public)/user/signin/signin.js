@@ -1,20 +1,25 @@
 "use client";
-import React from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { auth } from "../../../lib/firebase";
-
 import {
   signInWithEmailAndPassword,
   setPersistence,
   browserSessionPersistence,
 } from "firebase/auth";
 import AttentionAlert3 from "@/components/AttentionAlert";
+import Link from "next/link";
 
 export default function SignIn() {
-  const params = useSearchParams();
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = React.useState(null);
-  const returnUrl = params.get("returnUrl") || "/";
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [returnUrl, setReturnUrl] = useState("/");
+
+  // Extract search params on the client
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setReturnUrl(params.get("returnUrl") || "/");
+  }, []);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -35,11 +40,10 @@ export default function SignIn() {
       if (returnUrl) {
         router.push(returnUrl);
       } else {
-        router.push("/"); // Przekierowanie do strony głównej
+        router.push("/");
       }
     } catch (error) {
       console.error("Error:", error.code, error.message);
-      // Obsługa konkretnych błędów
       switch (error.code) {
         case "auth/invalid-credential":
           setErrorMessage("Nieprawidłowe dane logowania");
@@ -49,6 +53,7 @@ export default function SignIn() {
       }
     }
   };
+
   return (
     <section className="bg-gray-1 py-20 dark:bg-dark lg:py-[120px]">
       <div className="container mx-auto">
@@ -57,12 +62,12 @@ export default function SignIn() {
           <div className="w-full px-4">
             <div className="relative mx-auto max-w-[525px] overflow-hidden rounded-lg bg-white px-10 py-16 text-center dark:bg-dark-2 sm:px-12 md:px-[60px]">
               <div className="mb-10 text-center md:mb-16">
-                <a href="/#" className="mx-auto inline-block max-w-[160px]">
+                <Link href="/#" className="mx-auto inline-block max-w-[160px]">
                   <img
                     src="https://cdn.tailgrids.com/2.0/image/assets/images/logo/logo-primary.svg"
                     alt="logo"
                   />
-                </a>
+                </Link>
               </div>
               <form onSubmit={onSubmit}>
                 <InputBox type="email" name="email" placeholder="Email" />
@@ -72,17 +77,19 @@ export default function SignIn() {
                   placeholder="Password"
                 />
                 <div className="mb-10">
-                  <input
+                  <button
                     type="submit"
-                    value="Sign In"
+                    value=""
                     className="w-full cursor-pointer rounded-md border border-primary bg-primary px-5 py-3 text-base font-medium text-black  hover:bg-opacity-90 hover:text-white transition-all duration-200 hover:bg-slate-800 hover:font-bold"
-                  />
+                  >
+                    Sign In
+                  </button>
                 </div>
               </form>
               <p className="mb-6 text-base text-gray-500 ">Connect With</p>
               <ul className="-mx-2 mb-12 flex justify-between">
                 <li className="w-full px-2">
-                  <a
+                  <Link
                     href="/#"
                     className="flex h-11 items-center justify-center rounded-md bg-[#4064AC] hover:bg-opacity-90"
                   >
@@ -98,10 +105,10 @@ export default function SignIn() {
                         fill="white"
                       />
                     </svg>
-                  </a>
+                  </Link>
                 </li>
                 <li className="w-full px-2">
-                  <a
+                  <Link
                     href="/#"
                     className="flex h-11 items-center justify-center rounded-md bg-[#1C9CEA] hover:bg-opacity-90"
                   >
@@ -117,10 +124,10 @@ export default function SignIn() {
                         fill="white"
                       />
                     </svg>
-                  </a>
+                  </Link>
                 </li>
                 <li className="w-full px-2">
-                  <a
+                  <Link
                     href="/#"
                     className="flex h-11 items-center justify-center rounded-md bg-[#D64937] hover:bg-opacity-90"
                   >
@@ -136,23 +143,23 @@ export default function SignIn() {
                         fill="white"
                       />
                     </svg>
-                  </a>
+                  </Link>
                 </li>
               </ul>
-              <a
+              <Link
                 href="/#"
                 className="mb-2 inline-block text-base text-dark hover:text-primary hover:underline dark:text-black"
               >
                 Forget Password?
-              </a>
+              </Link>
               <p className="text-base text-gray-500 dark:text-dark-6">
                 <span className="pr-0.5">Not a member yet?</span>
-                <a
+                <Link
                   href="/user/register"
                   className="text-primary hover:underline"
                 >
                   Sign Up
-                </a>
+                </Link>
               </p>
 
               <div>

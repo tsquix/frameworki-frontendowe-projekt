@@ -9,6 +9,7 @@ import {
 import { useAuth } from "@/app/lib/AuthContext";
 import AttentionAlert3 from "@/components/AttentionAlert";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Register() {
   const [registerError, setRegisterError] = useState("");
@@ -64,12 +65,12 @@ export default function Register() {
           <div className="w-full px-4">
             <div className="relative mx-auto max-w-[525px] overflow-hidden rounded-lg bg-white px-10 py-16 text-center dark:bg-dark-2 sm:px-12 md:px-[60px]">
               <div className="mb-10 text-center md:mb-16">
-                <a href="/#" className="mx-auto inline-block max-w-[160px]">
+                <Link href="/#" className="mx-auto inline-block max-w-[160px]">
                   <img
                     src="https://cdn.tailgrids.com/2.0/image/assets/images/logo/logo-primary.svg"
                     alt="logo"
                   />
-                </a>
+                </Link>
               </div>
               <form onSubmit={onSubmit}>
                 <InputBox
@@ -103,7 +104,7 @@ export default function Register() {
               </p>
               <ul className="-mx-2 mb-12 flex justify-between">
                 <li className="w-full px-2">
-                  <a
+                  <Link
                     href="/#"
                     className="flex h-11 items-center justify-center rounded-md bg-[#4064AC] hover:bg-opacity-90"
                   >
@@ -119,10 +120,10 @@ export default function Register() {
                         fill="white"
                       />
                     </svg>
-                  </a>
+                  </Link>
                 </li>
                 <li className="w-full px-2">
-                  <a
+                  <Link
                     href="/#"
                     className="flex h-11 items-center justify-center rounded-md bg-[#1C9CEA] hover:bg-opacity-90"
                   >
@@ -138,10 +139,10 @@ export default function Register() {
                         fill="white"
                       />
                     </svg>
-                  </a>
+                  </Link>
                 </li>
                 <li className="w-full px-2">
-                  <a
+                  <Link
                     href="/#"
                     className="flex h-11 items-center justify-center rounded-md bg-[#D64937] hover:bg-opacity-90"
                   >
@@ -157,7 +158,7 @@ export default function Register() {
                         fill="white"
                       />
                     </svg>
-                  </a>
+                  </Link>
                 </li>
               </ul>
 
