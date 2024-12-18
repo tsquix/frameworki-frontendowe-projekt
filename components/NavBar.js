@@ -13,7 +13,7 @@ export default function Navbar() {
           <ul className="flex flex-col space-y-4">
             <ListItem NavLink="/">Home</ListItem>
             <ListItem NavLink="/user/">Profile</ListItem>
-            <ListItem NavLink="/quizPairs/">Match pairs quiz</ListItem>
+            <ListItem NavLink="/quizzes/">Quizzes</ListItem>
           </ul>
         </nav>
 

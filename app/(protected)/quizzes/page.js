@@ -2,6 +2,7 @@
 import { useState } from "react";
 import QuizPairs from "./quizPairs";
 import QuizSingle from "./quizSingle";
+import QuizBlanks from "./quizBlanks";
 export default function Page() {
   const [quiz, setQuiz] = useState("");
   // return <QuizPairs></QuizPairs>;
@@ -22,9 +23,16 @@ export default function Page() {
           >
             Single-choice
           </button>
+          <button
+            className=" bg-white text-black px-3 py-1 rounded-lg"
+            onClick={() => setQuiz("blanks")}
+          >
+            Blanks
+          </button>
         </div>
         {quiz == "pairs" && <QuizPairs />}
         {quiz == "single-choice" && <QuizSingle />}
+        {quiz == "blanks" && <QuizBlanks />}
       </div>
     </>
   );

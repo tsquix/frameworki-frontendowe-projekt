@@ -21,11 +21,12 @@ const QuizPairsGame = () => {
   // Stan dla formularza dodawania nowej pary
   const [newKey, setNewKey] = useState("");
   const [newValue, setNewValue] = useState("");
-
+  //TODO fix loop
   useEffect(() => {
     fetchPairs();
 
-    // console.log(questions);
+    // console.log(questions.correctAnswer.includes(selectedOption));
+    // console.log(options);
   });
 
   const fetchPairs = async () => {
@@ -40,8 +41,8 @@ const QuizPairsGame = () => {
         quizDoc.data().questions &&
         quizDoc.data().questions.options
       ) {
-        setOptions(quizDoc.data().questions.options);
-        setQuestions(quizDoc.data().questions);
+        setOptions(quizDoc.data().questions.singleChoice[0].options);
+        setQuestions(quizDoc.data().questions.singleChoice[0]);
       }
     } catch (err) {
       console.error("Error fetching options:", err);
@@ -49,19 +50,21 @@ const QuizPairsGame = () => {
   };
 
   const handleKeyClick = (option) => {
-    selectedOption.includes(option.value)
-      ? setSelectedOption("")
-      : setSelectedOption(option.value);
+    if (isFirstSubmit) {
+      selectedOption.includes(option.value)
+        ? setSelectedOption("")
+        : setSelectedOption(option.value);
+    }
   };
   const handleSubmit = () => {
     if (isFirstSubmit) {
       if (selectedOption != "") {
         setIsFirstSubmit(false);
-        if (questions.correctAnswerIds.includes(selectedOption)) {
+        if (questions.correctAnswer.includes(selectedOption)) {
           setIsCorrect(selectedOption);
           setScore(score + 1);
         } else {
-          setIsCorrect(questions.correctAnswerIds[0]);
+          setIsCorrect(questions.correctAnswer);
         }
       }
     }
@@ -86,34 +89,33 @@ const QuizPairsGame = () => {
 
       <h2>Question: {questions.title} </h2>
       {options
-        .filter((option) => option.type === "text")
+        // .filter((option) => option.type === "text")
         .map((option, index) => (
           <div
             key={`key-${index}`}
             onClick={() => handleKeyClick(option)}
-            className={`flex items-center gap-4 m-4 bg-white shadow text-black p-4 rounded-lg cursor-pointer transition-colors ${
+            className={`flex items-center gap-4 m-4  shadow text-black p-4 rounded-lg cursor-pointer transition-colors ${
               selectedOption.includes(option.value)
                 ? "bg-blue-200"
                 : "bg-white hover:bg-gray-100"
             } ${
-              isCorrect == option.value && !isFirstSubmit
-                ? "bg-green-400 hover:bg-green-300"
-                : ""
+              isCorrect == option.value && !isFirstSubmit ? "bg-green-400 " : ""
             } ${
               !isCorrect.includes(option.value) && !isFirstSubmit
-                ? "bg-red-400 hover:bg-red-300"
+                ? "bg-red-400 "
                 : ""
             } shadow`}
           >
             <span className="flex-1">{option.value}</span>
             {/* <button
-            // onClick={() => removePair(index)}
-            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"+
-          >
-            Remove
-          </button> */}
+              // onClick={() => removePair(index)}
+              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+            >
+              Remove
+            </button> */}
           </div>
         ))}
+
       <div className="flex justify-center mt-12 gap-4">
         <button
           className="bg-green-300 text-black px-3 py-1 rounded-lg hover:bg-green-400 transition-colors"
