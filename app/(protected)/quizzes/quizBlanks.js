@@ -8,9 +8,9 @@ export default function QuizBlanks() {
   const [selectedAnswer2, setSelectedAnswer2] = useState("");
   const [score, setScore] = useState(0);
   const [questions, setQuestions] = useState([]);
-  const [x1, setX1] = useState("");
-  const [x2, setX2] = useState("");
-  const [x3, setX3] = useState("");
+  const [questionFirstPart, setX1] = useState("");
+  const [questionSecPart, setX2] = useState("");
+  const [questionThirdtPart, setX3] = useState("");
   const [isFirstSubmit, setIsFirstSubmit] = useState(true);
   const [isCorrect, setIsCorrect] = useState(false);
   const [isCorrect2, setIsCorrect2] = useState(false);
@@ -49,7 +49,7 @@ export default function QuizBlanks() {
       if (
         quizDoc &&
         quizDoc.data().questions &&
-        quizDoc.data().questions.options
+        quizDoc.data().questions.blanks
       ) {
         setBlanks(quizDoc.data().questions.blanks[0].blanksContent);
         setQuestions(quizDoc.data().questions.blanks[0]);
@@ -92,9 +92,9 @@ export default function QuizBlanks() {
       {/* Question dropdown */}
       <h2 className="text-2xl font-bold mb-4">Choose correct answers</h2>
       <span className="font-bold">Score: {score}/1</span>
-
+      <h2 className="my-8">Fill in blanks </h2>
       <div className="flex mt-4 items-center">
-        <p className="text-white px-2">{x1}</p>
+        <p className="text-white px-2">{questionFirstPart}</p>
         <select
           value={selectedAnswer}
           className={`text-black px-4 py-2  ${
@@ -112,7 +112,7 @@ export default function QuizBlanks() {
               <option key={`question-${index}`}>{question}</option>
             ))}
         </select>
-        <p className="text-white px-2">{x2}</p>
+        <p className="text-white px-2">{questionSecPart}</p>
         <select
           value={selectedAnswer2}
           className={`text-black px-4 py-2  ${
@@ -132,7 +132,7 @@ export default function QuizBlanks() {
               </option>
             ))}
         </select>
-        <p className="text-white px-2">{x3}</p>
+        <p className="text-white px-2">{questionThirdtPart}</p>
       </div>
       <div className="flex justify-center mt-12 gap-4">
         <button

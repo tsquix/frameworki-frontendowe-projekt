@@ -8,7 +8,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 
-const QuizPairsGame = () => {
+export default function QuizPairs() {
   const [pairs, setPairs] = useState([]);
   const [gameState, setGameState] = useState("edit"); // 'edit' | 'play'
   const [selectedPair, setSelectedPair] = useState(null);
@@ -22,6 +22,7 @@ const QuizPairsGame = () => {
 
   useEffect(() => {
     fetchPairs();
+    console.log(pairs);
   }, []);
 
   const fetchPairs = async () => {
@@ -227,6 +228,4 @@ const QuizPairsGame = () => {
       </button>
     </div>
   );
-};
-
-export default QuizPairsGame;
+}
