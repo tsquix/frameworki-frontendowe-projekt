@@ -27,8 +27,8 @@ const QuizSingle = () => {
     fetchPairs();
 
     // console.log(questions.correctAnswer.includes(selectedOption));
-    // console.log(options);
-  });
+    console.log(options);
+  }, []);
 
   const fetchPairs = async () => {
     try {
@@ -120,35 +120,36 @@ const QuizSingle = () => {
         <span className="font-bold">Score: {score}/1</span>
 
         <h2>Question: {questions.title} </h2>
-        {options
-          .filter((option) => option.type === "text")
-          .map((option, index) => (
-            <div
-              key={`key-${index}`}
-              onClick={() => handleKeyClick(option)}
-              className={`flex items-center gap-4 m-4  shadow text-black p-4 rounded-lg cursor-pointer transition-colors ${
-                selectedOption.includes(option.value)
-                  ? "bg-blue-200"
-                  : "bg-white hover:bg-gray-100"
-              } ${
-                isCorrect == option.value && !isFirstSubmit
-                  ? "bg-green-400 "
-                  : ""
-              } ${
-                !isCorrect.includes(option.value) && !isFirstSubmit
-                  ? "bg-red-400 "
-                  : ""
-              } shadow`}
-            >
-              <span className="flex-1">{option.value}</span>
-              {/* <button
+        {options.length > 0 &&
+          options
+            .filter((option) => option.type === "text")
+            .map((option, index) => (
+              <div
+                key={`key-${index}`}
+                onClick={() => handleKeyClick(option)}
+                className={`flex items-center gap-4 m-4  shadow text-black p-4 rounded-lg cursor-pointer transition-colors ${
+                  selectedOption.includes(option.value)
+                    ? "bg-blue-200"
+                    : "bg-white hover:bg-gray-100"
+                } ${
+                  isCorrect == option.value && !isFirstSubmit
+                    ? "bg-green-400 "
+                    : ""
+                } ${
+                  !isCorrect.includes(option.value) && !isFirstSubmit
+                    ? "bg-red-400 "
+                    : ""
+                } shadow`}
+              >
+                <span className="flex-1">{option.value}</span>
+                {/* <button
               // onClick={() => removePair(index)}
               className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
             >
               Remove
             </button> */}
-            </div>
-          ))}
+              </div>
+            ))}
 
         <div className="flex justify-center mt-12 gap-4">
           <button
@@ -185,35 +186,36 @@ const QuizSingle = () => {
         <span className="font-bold">Score: {score}/1</span>
 
         <h2>Question: {questions.title} </h2>
-        {options
-          .filter((option) => option.type === "image")
-          .map((option, index) => (
-            <div
-              key={`key-${index}`}
-              onClick={() => handleKeyClick(option)}
-              className={`flex items-center gap-4 m-4  shadow text-black p-4 rounded-lg cursor-pointer transition-colors ${
-                selectedOption.includes(option.value)
-                  ? "bg-blue-200"
-                  : "bg-white hover:bg-gray-100"
-              } ${
-                isCorrect == option.value && !isFirstSubmit
-                  ? "bg-green-400 "
-                  : ""
-              } ${
-                !isCorrect.includes(option.value) && !isFirstSubmit
-                  ? "bg-red-400 "
-                  : ""
-              } shadow`}
-            >
-              <img src={option.imgsrc} alt="" className="h-[260px] w-full" />
-              {/* <button
+        {options.length > 0 &&
+          options
+            .filter((option) => option.type === "image")
+            .map((option, index) => (
+              <div
+                key={`key-${index}`}
+                onClick={() => handleKeyClick(option)}
+                className={`flex items-center gap-4 m-4  shadow text-black p-4 rounded-lg cursor-pointer transition-colors ${
+                  selectedOption.includes(option.value)
+                    ? "bg-blue-200"
+                    : "bg-white hover:bg-gray-100"
+                } ${
+                  isCorrect == option.value && !isFirstSubmit
+                    ? "bg-green-400 "
+                    : ""
+                } ${
+                  !isCorrect.includes(option.value) && !isFirstSubmit
+                    ? "bg-red-400 "
+                    : ""
+                } shadow`}
+              >
+                <img src={option.imgSrc} alt="" className="h-[260px] w-full" />
+                {/* <button
               // onClick={() => removePair(index)}
               className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
             >
               Remove
             </button> */}
-            </div>
-          ))}
+              </div>
+            ))}
 
         <div className="flex justify-center mt-12 gap-4">
           <button
