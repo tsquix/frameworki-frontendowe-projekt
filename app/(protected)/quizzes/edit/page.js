@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import EditPairs from "./EditPairs";
 import EditSingle from "./EditSingle";
+import EditMulti from "./EditMulti";
 
 export default function Edit() {
   const [editState, setEditState] = useState("");
@@ -63,7 +64,23 @@ export default function Edit() {
       </>
     );
   }
+  if (editState === "multi-choice") {
+    return (
+      <>
+        <div className="flex justify-between mb-4">
+          <h2 className="text-2xl font-bold mb-4">Edit multi Choice</h2>
 
+          <ChoiceBtn
+            text="Back to edit"
+            stateName={setEditState}
+            stateValue={""}
+          />
+        </div>
+
+        <EditMulti type={"multi"} />
+      </>
+    );
+  }
   if (editState === "single-choice") {
     return (
       <>
@@ -77,7 +94,7 @@ export default function Edit() {
           />
         </div>
 
-        <EditSingle />
+        <EditMulti type={"single"} />
       </>
     );
   }

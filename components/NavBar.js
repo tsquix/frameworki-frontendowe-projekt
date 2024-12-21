@@ -14,7 +14,7 @@ export default function Navbar() {
             <ListItem NavLink="/">Home</ListItem>
             <ListItem NavLink="/user/">Profile</ListItem>
             <ListItem NavLink="/quizzes/">Quizzes</ListItem>
-            <ListItem NavLink="quizzes/edit/">Edit quizz</ListItem>
+            <ListItem NavLink="/quizzes/edit/">Edit quizz</ListItem>
           </ul>
         </nav>
 
