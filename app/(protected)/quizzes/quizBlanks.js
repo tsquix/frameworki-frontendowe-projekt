@@ -94,6 +94,7 @@ export default function QuizBlanks() {
   };
 
   return (
+    //TODO jak obie odpowiedzi sa zle to obie powinny sie swiecic na czerwono
     <div className="p-4">
       {/* Question dropdown */}
       <h2 className="text-2xl font-bold mb-4">Choose correct answers</h2>

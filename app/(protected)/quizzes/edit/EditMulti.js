@@ -43,7 +43,6 @@ export default function EditChoice({ type }) {
             ? quizDoc.data().questions.multiChoice[0]
             : quizDoc.data().questions.singleChoice[0];
 
-        // Ensure correctAnswer is always an array
         const correctAnswer = Array.isArray(questionData.correctAnswer)
           ? questionData.correctAnswer
           : questionData.correctAnswer
@@ -96,8 +95,8 @@ export default function EditChoice({ type }) {
       ...prev,
       correctAnswer:
         type === "single"
-          ? [questionEdit.correctAnswer] // For single choice, replace the array with new single item
-          : [...prev.correctAnswer, questionEdit.correctAnswer], // For multi choice, append to array
+          ? [questionEdit.correctAnswer]
+          : [...prev.correctAnswer, questionEdit.correctAnswer],
     }));
 
     setQuestionEdit((prev) => ({ ...prev, correctAnswer: "" }));
@@ -220,7 +219,7 @@ export default function EditChoice({ type }) {
               {choiceData.correctAnswer.map((answer, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-2 bg-gray-100 px-3 py-1 rounded"
+                  className="flex items-center gap-2 bg-green-300 px-3 py-1 rounded"
                 >
                   <span>{answer}</span>
                   <button

@@ -97,34 +97,41 @@ export default function EditBlanks() {
   const addNewOption = (optionId, newOption) => {
     setBlanksData((prev) => ({
       ...prev,
-      blanksContent: prev.blanksContent.map((item) =>
-        item.id == optionId
-          ? { ...item, options: [...item.options, newOption] }
-          : item
-      ),
+      blanksContent:
+        optionType == "option"
+          ? prev.blanksContent.map((item) =>
+              item.id == optionId
+                ? { ...item, options: [...item.options, newOption] }
+                : item
+            )
+          : prev.blanksContent.map((item) =>
+              item.id == optionId
+                ? { ...item, correctAnswer: [newOption] }
+                : item
+            ),
     }));
-    console.log(blanksData);
+
     setNewOption({
       options: "",
       id: "",
     });
-  };
-
-  const addNewAnswer = (optionId, newCorrectAnswer) => {
-    setBlanksData((prev) => ({
-      ...prev,
-      blanksContent: prev.blanksContent.map((item) =>
-        item.id == optionId
-          ? { ...item, correctAnswer: [newCorrectAnswer] }
-          : item
-      ),
-    }));
-    console.log(blanksData);
     setNewCorrectAnswer({
       correctAnswer: [""],
       id: "",
     });
+    setOptionType("");
   };
+
+  // const addNewAnswer = (optionId, newCorrectAnswer) => {
+  //   setBlanksData((prev) => ({
+  //     ...prev,
+  //     blanksContent: prev.blanksContent.map((item) =>
+  //       item.id == optionId
+  //         ? { ...item, correctAnswer: [newCorrectAnswer] }
+  //         : item
+  //     ),
+  //   }));
+  // };
 
   const removeOption = (optionToRemove, blank) => {
     setBlanksData((prev) => ({
@@ -172,7 +179,7 @@ export default function EditBlanks() {
               onChange={(e) =>
                 setQuestionParts((prev) => {
                   const updatedParts = [...prev];
-                  updatedParts[0] = e.target.value; // Zmienia pierwszą część tytułu
+                  updatedParts[0] = e.target.value;
                   return updatedParts;
                 })
               }
@@ -184,7 +191,7 @@ export default function EditBlanks() {
               onChange={(e) =>
                 setQuestionParts((prev) => {
                   const updatedParts = [...prev];
-                  updatedParts[1] = e.target.value; // Zmienia pierwszą część tytułu
+                  updatedParts[1] = e.target.value;
                   return updatedParts;
                 })
               }
@@ -197,22 +204,24 @@ export default function EditBlanks() {
               onChange={(e) =>
                 setQuestionParts((prev) => {
                   const updatedParts = [...prev];
-                  updatedParts[2] = e.target.value; // Zmienia pierwszą część tytułu
+                  updatedParts[2] = e.target.value;
                   return updatedParts;
                 })
               }
               placeholder="Enter third part of title"
               className="w-full p-2 border rounded"
             />
+            <button
+              onClick={updateTitle}
+              className="bg-green-500 text-white px-8 py-2 text-nowrap rounded hover:bg-green-600"
+            >
+              {" "}
+              Update title
+            </button>
           </div>
-          <button
-            onClick={updateTitle}
-            className="bg-green-500 text-white px-8 py-2 rounded hover:bg-green-600"
-          >
-            {" "}
-            Update title
-          </button>
         </div>
+      </div>
+      <div className="bg-white p-4 shadow text-black mb-4">
         <div className="">
           {" "}
           <h2 className="text-xl font-bold mb-4">Title preview</h2>
@@ -238,8 +247,12 @@ export default function EditBlanks() {
           </select>
           <p className="text-black px-2">{questionParts[2]}</p>
         </div>
-        <div className="flex flex-col mb-4 mt-8">
-          <h2 className="text-xl font-bold mb-4">Edit options</h2>
+      </div>
+      <div className="bg-white p-4 shadow text-black mb-4">
+        <div className="flex flex-col ">
+          <h2 className="text-xl font-bold mb-4">
+            Edit options / correct answers
+          </h2>
           <div className="flex gap-2 ">
             <select
               value={newOption.id}
@@ -252,71 +265,109 @@ export default function EditBlanks() {
               <option value="1">First</option>
               <option value="2">Second</option>
             </select>
-
+            <select
+              value={optionType}
+              onChange={(e) => setOptionType(() => e.target.value)}
+              className="flex-1 p-2 border rounded"
+            >
+              <option value="">Select option type</option>
+              <option value="option">Option</option>
+              <option value="correctAnswer">Correct Answer</option>
+            </select>
             <input
               type="text"
               value={newOption.options[0] || ""}
               onChange={(e) =>
                 setNewOption((prev) => ({
                   ...prev,
-                  options: [e.target.value], // Store input value as array
+                  options: [e.target.value],
                 }))
               }
               placeholder="Enter option value"
               className="w-full p-2 border rounded"
             />
+            <button
+              onClick={() => addNewOption(newOption.id, newOption.options[0])}
+              className="bg-green-500 text-white px-8 py-2  rounded hover:bg-green-600 text-nowrap"
+            >
+              {" "}
+              {optionType == "correctAnswer" ? "Set answer" : "Add option"}
+            </button>
           </div>
-          <button
-            onClick={() => addNewOption(newOption.id, newOption.options[0])}
-            className="bg-green-500 text-white px-8 py-2 my-4 rounded hover:bg-green-600"
-          >
-            {" "}
-            Add new option
-          </button>
         </div>
-        <div>
-          <>
-            <div className="flex flex-wrap gap-12 ">
-              <div className="flex flex-col">
-                <h2 className="text-xl font-bold mb-4">First blank options</h2>
-                {blanksData?.blanksContent?.[0]?.options?.length > 0 &&
-                  blanksData.blanksContent[0].options.map((question, index) => (
-                    <div
-                      className="flex items-center gap-2 bg-gray-100 px-3 py-1 my-1 rounded"
-                      key={`question-${index}`}
-                    >
-                      <span>{question}</span>
-                      <button
-                        onClick={() => removeOption(question, 1)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-              </div>
+      </div>
 
-              <div className="flex flex-col">
-                <h2 className="text-xl font-bold mb-4">Second blank options</h2>
-                {blanksData?.blanksContent?.[1]?.options?.length > 0 &&
-                  blanksData.blanksContent[1].options.map((question, index) => (
-                    <div
-                      className="flex items-center gap-2 bg-gray-100 px-3 py-1 my-1 rounded"
-                      key={`question-${index}`}
+      <div className="bg-white p-4 shadow text-black mb-4">
+        <>
+          <div className="flex flex-wrap gap-12 ">
+            <div className="flex flex-col">
+              <h2 className="text-xl font-bold mb-4">First blank options</h2>
+              {blanksData?.blanksContent?.[0]?.options?.length > 0 &&
+                blanksData.blanksContent[0].options.map((question, index) => (
+                  <div
+                    className="flex items-center gap-2 bg-gray-100 px-3 py-1 my-1 rounded justify-between"
+                    key={`question-${index}`}
+                  >
+                    <span>{question}</span>
+                    <button
+                      onClick={() => removeOption(question, 1)}
+                      className="text-red-500 hover:text-red-700"
                     >
-                      <span>{question}</span>
-                      <button
-                        // onClick={() => removeOption(index)}
-                        className="text-red-500 hover:text-red-700"
+                      ×
+                    </button>
+                  </div>
+                ))}
+              <div>
+                <h3 className="text-md font-bold mt-4">Correct answer</h3>
+                {blanksData?.blanksContent?.[0]?.correctAnswer?.length > 0 &&
+                  blanksData.blanksContent[0].correctAnswer.map(
+                    (question, index) => (
+                      <div
+                        className="flex items-center gap-2 bg-green-300 px-3 py-1 my-1 rounded"
+                        key={`question-${index}`}
                       >
-                        ×
-                      </button>
-                    </div>
-                  ))}
+                        <span>{question}</span>
+                      </div>
+                    )
+                  )}
               </div>
             </div>
-          </>
-          <div className="mt-8">
+
+            <div className="flex flex-col">
+              <h2 className="text-xl font-bold mb-4">Second blank options</h2>
+              {blanksData?.blanksContent?.[1]?.options?.length > 0 &&
+                blanksData.blanksContent[1].options.map((question, index) => (
+                  <div
+                    className="flex items-center gap-2 bg-gray-100 px-3 py-1 my-1 rounded justify-between"
+                    key={`question-${index}`}
+                  >
+                    <span>{question}</span>
+                    <button
+                      onClick={() => removeOption(question, 2)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              <div>
+                <h3 className="text-md font-bold mt-4">Correct answer</h3>
+                {blanksData?.blanksContent?.[1]?.correctAnswer?.length > 0 &&
+                  blanksData.blanksContent[1].correctAnswer.map(
+                    (question, index) => (
+                      <div
+                        className="flex items-center gap-2 bg-green-300 px-3 py-1 my-1 rounded"
+                        key={`question-${index}`}
+                      >
+                        <span>{question}</span>
+                      </div>
+                    )
+                  )}
+              </div>
+            </div>
+          </div>
+        </>
+        {/* <div className="mt-8">
             <h2 className="text-xl font-bold mb-4">Edit correct Answers</h2>
             <div className=" flex gap-2">
               <select
@@ -339,7 +390,7 @@ export default function EditBlanks() {
                 onChange={(e) =>
                   setNewCorrectAnswer((prev) => ({
                     ...prev,
-                    correctAnswer: [e.target.value], // Store input value as array
+                    correctAnswer: [e.target.value], 
                   }))
                 }
                 placeholder="Enter option value"
@@ -358,49 +409,7 @@ export default function EditBlanks() {
               {" "}
               Set answer
             </button>{" "}
-            <div className="flex flex-row">
-              {" "}
-              <div>
-                {blanksData?.blanksContent?.[0]?.correctAnswer?.length > 0 &&
-                  blanksData.blanksContent[0].correctAnswer.map(
-                    (question, index) => (
-                      <div
-                        className="flex items-center gap-2 bg-gray-100 px-3 py-1 my-1 rounded"
-                        key={`question-${index}`}
-                      >
-                        <span>{question}</span>
-                        <button
-                          onClick={() => removeOption(question, 1)}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    )
-                  )}
-              </div>
-              <div>
-                {blanksData?.blanksContent?.[1]?.correctAnswer?.length > 0 &&
-                  blanksData.blanksContent[1].correctAnswer.map(
-                    (question, index) => (
-                      <div
-                        className="flex items-center gap-2 bg-gray-100 px-3 py-1 my-1 rounded"
-                        key={`question-${index}`}
-                      >
-                        <span>{question}</span>
-                        <button
-                          onClick={() => removeOption(question, 1)}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    )
-                  )}
-              </div>
-            </div>
-          </div>
-        </div>
+          </div> */}
       </div>
 
       <div className="mt-4">
