@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import EditPairs from "./EditPairs";
 import EditSingle from "./EditSingle";
 import EditMulti from "./EditMulti";
+import EditBlanks from "./EditBlanks";
 
 export default function Edit() {
   const [editState, setEditState] = useState("");
@@ -95,6 +96,23 @@ export default function Edit() {
         </div>
 
         <EditMulti type={"single"} />
+      </>
+    );
+  }
+  if (editState === "blanks") {
+    return (
+      <>
+        <div className="flex justify-between mb-4">
+          <h2 className="text-2xl font-bold mb-4">Edit blanks</h2>
+
+          <ChoiceBtn
+            text="Back to edit"
+            stateName={setEditState}
+            stateValue={""}
+          />
+        </div>
+
+        <EditBlanks />
       </>
     );
   }
