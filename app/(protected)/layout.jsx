@@ -4,6 +4,7 @@ import { useLayoutEffect } from "react";
 import { redirect } from "next/navigation";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/NavBar";
+import { ClipLoader } from "react-spinners";
 
 function Protected({ children }) {
   const { user, loading } = useAuth();
@@ -16,13 +17,23 @@ function Protected({ children }) {
   }, [user, returnUrl, loading]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center ">
+        <ClipLoader
+          color={"#ffffff"}
+          loading={loading}
+          size={150}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      </div>
+    );
   }
 
   return (
     <>
       <Navbar />
-      <main className="ml-[20%] px-12 pt-12">{children}</main>
+      <main className="max-w-7xl mx-auto">{children}</main>
     </>
   );
 }

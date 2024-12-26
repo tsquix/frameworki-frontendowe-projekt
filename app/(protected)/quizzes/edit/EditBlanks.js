@@ -1,4 +1,5 @@
 "use client";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import {
   collection,
   doc,
@@ -13,7 +14,7 @@ export default function EditBlanks() {
   const [blanks, setBlanks] = useState([]);
   const [titleEdit, setTitleEdit] = useState([]);
   const [optionType, setOptionType] = useState("");
-
+  const [loading, setLoading] = useState(true);
   const [blanksData, setBlanksData] = useState({
     blanksContent: [
       { options: [""], correctAnswer: [""], id: "1" },
@@ -32,6 +33,7 @@ export default function EditBlanks() {
 
   useEffect(() => {
     fetchBlanks();
+
     console.log(newOption);
   }, []);
   useEffect(() => {
@@ -69,6 +71,7 @@ export default function EditBlanks() {
           ...blankData,
           content,
         });
+        setLoading(false);
       }
     } catch (err) {
       console.error("Error fetching blanks:", err);
@@ -167,7 +170,9 @@ export default function EditBlanks() {
       alert("Error saving blanks");
     }
   };
-
+  if (loading) {
+    return <LoadingSpinner loading={loading} />;
+  }
   return (
     <div className="p-4">
       <div className="bg-white p-4 shadow text-black mb-4">
@@ -319,8 +324,8 @@ export default function EditBlanks() {
                 ))}
               <div>
                 <h3 className="text-md font-bold mt-4">Correct answer</h3>
-                {blanksData?.blanksContent?.[0]?.correctAnswer?.length > 0 &&
-                  blanksData.blanksContent[0].correctAnswer.map(
+                {blanksData?.blanksContent[0].correctAnswer?.length > 0 &&
+                  blanksData?.blanksContent[0]?.correctAnswer?.map(
                     (question, index) => (
                       <div
                         className="flex items-center gap-2 bg-green-300 px-3 py-1 my-1 rounded"
@@ -336,20 +341,22 @@ export default function EditBlanks() {
             <div className="flex flex-col">
               <h2 className="text-xl font-bold mb-4">Second blank options</h2>
               {blanksData?.blanksContent?.[1]?.options?.length > 0 &&
-                blanksData.blanksContent[1].options.map((question, index) => (
-                  <div
-                    className="flex items-center gap-2 bg-gray-100 px-3 py-1 my-1 rounded justify-between"
-                    key={`question-${index}`}
-                  >
-                    <span>{question}</span>
-                    <button
-                      onClick={() => removeOption(question, 2)}
-                      className="text-red-500 hover:text-red-700"
+                blanksData?.blanksContent[1]?.options?.map(
+                  (question, index) => (
+                    <div
+                      className="flex items-center gap-2 bg-gray-100 px-3 py-1 my-1 rounded justify-between"
+                      key={`question-${index}`}
                     >
-                      ×
-                    </button>
-                  </div>
-                ))}
+                      <span>{question}</span>
+                      <button
+                        onClick={() => removeOption(question, 2)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  )
+                )}
               <div>
                 <h3 className="text-md font-bold mt-4">Correct answer</h3>
                 {blanksData?.blanksContent?.[1]?.correctAnswer?.length > 0 &&

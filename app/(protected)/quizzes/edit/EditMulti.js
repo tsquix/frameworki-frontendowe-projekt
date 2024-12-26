@@ -1,4 +1,5 @@
 "use client";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import {
   collection,
   doc,
@@ -9,6 +10,7 @@ import {
 import { useEffect, useState } from "react";
 
 export default function EditChoice({ type }) {
+  const [loading, setLoading] = useState(true);
   const [choiceData, setChoiceData] = useState({
     title: "",
     correctAnswer: [],
@@ -53,6 +55,7 @@ export default function EditChoice({ type }) {
           ...questionData,
           correctAnswer,
         });
+        setLoading(false);
       }
     } catch (err) {
       console.error("Error fetching choice data:", err);
@@ -169,7 +172,9 @@ export default function EditChoice({ type }) {
       alert("Error saving changes");
     }
   };
-
+  if (loading) {
+    return <LoadingSpinner loading={loading} />;
+  }
   return (
     <div className="p-4">
       {/* Question Edit Form */}

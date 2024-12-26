@@ -1,37 +1,49 @@
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { useAuth } from "@/app/lib/AuthContext";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 export default function QuizMultiple() {
+  const { user } = useAuth();
   const [answerType, setAnswerType] = useState("text");
   const [questions, setQuestions] = useState([]);
   const [multiple, setMultiple] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   const [score, setScore] = useState(0);
   const [isCorrect, setIsCorrect] = useState("");
   const [isFirstSubmit, setIsFirstSubmit] = useState(true);
 
   useEffect(() => {
-    fetchPairs();
+    if (user) {
+      const userUID = user.uid;
+      fetchPairs(userUID);
+    }
     // console.log();
   });
-  useEffect(() => {
-    console.log(isCorrect);
-  }, [selectedOptions]);
-  const fetchPairs = async () => {
+  // useEffect(() => {
+  //   console.log(isCorrect);
+  // }, [selectedOptions]);
+  const fetchPairs = async (userUID) => {
     try {
       const db = getFirestore();
-      const quizCollection = collection(db, "quiz");
-      const querySnapshot = await getDocs(quizCollection);
-      const quizDoc = querySnapshot.docs[0];
+      const quizDoc = doc(db, "quiz", userUID);
+      const docSnapshot = await getDoc(quizDoc);
 
       if (
-        quizDoc &&
-        quizDoc.data().questions &&
-        quizDoc.data().questions.multiChoice
+        docSnapshot.exists() &&
+        docSnapshot.data().questions &&
+        docSnapshot.data().questions.multiChoice
       ) {
-        setMultiple(quizDoc.data().questions.multiChoice[0].options);
-        setQuestions(quizDoc.data().questions.multiChoice[0]);
+        setMultiple(docSnapshot.data().questions.multiChoice[0].options);
+        setQuestions(docSnapshot.data().questions.multiChoice[0]);
+        setLoading(false);
       }
     } catch (err) {
       console.error("Error fetching options:", err);
@@ -77,7 +89,9 @@ export default function QuizMultiple() {
     setScore(0);
     setSelectedOptions([]);
   };
-
+  if (loading) {
+    return <LoadingSpinner loading={loading} />;
+  }
   if (answerType === "") {
     return (
       <div className="p-4">
@@ -121,7 +135,6 @@ export default function QuizMultiple() {
               .map((option, index) => (
                 <div
                   onClick={() => handleKeyClick(option)}
-                  //TODO zrobic partialy correct zeby zaznaczona poprawna odpowiedz byla na zielono a zla czerwono
                   className={`flex items-center gap-4 m-4  shadow  text-black p-4 rounded-lg cursor-pointer transition-colors
                 ${
                   selectedOptions.includes(option.value) && isCorrect
@@ -202,7 +215,7 @@ export default function QuizMultiple() {
                   key={`option-${index}`}
                 >
                   <img
-                    src={option.imgsrc}
+                    src={option.imgSrc}
                     alt=""
                     className="h-[260px] w-full"
                   />

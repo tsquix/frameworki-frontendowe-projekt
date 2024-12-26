@@ -5,19 +5,24 @@ import {
   doc,
   updateDoc,
   collection,
-  getDocs,
+  getDoc,
 } from "firebase/firestore";
-
+import { useAuth } from "@/app/lib/AuthContext";
+import LoadingSpinner from "@/components/LoadingSpinner";
 export default function QuizPairs() {
+  const { user } = useAuth();
   const [pairs, setPairs] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   const [selectedPair, setSelectedPair] = useState(null);
   const [matchedPairs, setMatchedPairs] = useState([]);
   const [shuffledValues, setShuffledValues] = useState([]);
   const [score, setScore] = useState(0);
 
   useEffect(() => {
-    fetchPairs();
+    if (user) {
+      const userUID = user.uid;
+      fetchPairs(userUID);
+    }
 
     console.log(pairs);
   }, []);
@@ -30,22 +35,23 @@ export default function QuizPairs() {
     setScore(0);
   }, [pairs]);
 
-  const fetchPairs = async () => {
+  //TODO fetch pairs dla kazdego osobny quiz daje, zrobic dla wszystkich innych to samo
+  const fetchPairs = async (userUID) => {
     try {
       const db = getFirestore();
-      const quizCollection = collection(db, "quiz");
-      const querySnapshot = await getDocs(quizCollection);
-      const quizDoc = querySnapshot.docs[0];
+      const quizDoc = doc(db, "quiz", userUID);
+      const docSnapshot = await getDoc(quizDoc);
 
       if (
-        quizDoc &&
-        quizDoc.data().questions &&
-        quizDoc.data().questions.pairs
+        docSnapshot.exists() &&
+        docSnapshot.data().questions &&
+        docSnapshot.data().questions.pairs
       ) {
-        setPairs(quizDoc.data().questions.pairs);
+        setPairs(docSnapshot.data().questions.pairs);
+        setLoading(false);
       }
     } catch (err) {
-      console.error("Error fetching pairs:", err);
+      console.error("Error fetching options:", err);
     }
   };
 
@@ -72,6 +78,10 @@ export default function QuizPairs() {
     setMatchedPairs([]);
     setScore(0);
   };
+  if (loading) {
+    return <LoadingSpinner loading={loading} />;
+  }
+
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">Match the Pairs</h2>

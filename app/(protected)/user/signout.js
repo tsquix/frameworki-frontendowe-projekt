@@ -12,10 +12,9 @@ export default function LogoutForm() {
 
   return (
     <button
-      className=" flex py-2 text-base font-medium text-dark hover:text-primary text-white lg:inline-flex bg-slate-500 w-full shadow-lg rounded-md px-2 justify-center hover:bg-white hover:text-black hover:font-bold transition-all  duration-200"
+      className="bg-slate-100 rounded-md px-4 py-2 shadow-xl text-black border-2 border-black text-nowrap"
       onClick={onSubmit}
     >
-      {" "}
       Signout
     </button>
   );

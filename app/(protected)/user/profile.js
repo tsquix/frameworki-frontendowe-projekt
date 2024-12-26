@@ -1,35 +1,59 @@
 "use client";
-
 import { useAuth } from "@/app/lib/AuthContext";
 import { useEffect, useState } from "react";
 import { updateProfile } from "firebase/auth";
 import { db } from "../../lib/firebase";
 import { setDoc, doc, getDoc } from "firebase/firestore";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function Profile() {
   const { user } = useAuth();
   const [updateError, setError] = useState();
-  const [displayName, setDisplayName] = useState("");
-  const [updatedName, setUpdatedName] = useState("");
-  const [photoURL, setPhotoURL] = useState("");
   const [success, setSuccess] = useState(false);
-  const [street, setStreet] = useState("");
-  const [city, setCity] = useState("");
-  const [zipCode, setZipCode] = useState("");
-  // console.log(user);
+  const [loading, setLoading] = useState(true);
+  // Form state
+  const [formData, setFormData] = useState({
+    displayName: "",
+    photoURL: "",
+    street: "",
+    city: "",
+    zipCode: "",
+  });
+
+  // Display state
+  const [displayData, setDisplayData] = useState({
+    displayName: "",
+    photoURL: "",
+    street: "",
+    city: "",
+    zipCode: "",
+  });
 
   useEffect(() => {
     if (user) {
-      setDisplayName(user.displayName || "");
-      setPhotoURL(user.photoURL || "");
+      const initialData = {
+        displayName: user.displayName || "",
+        photoURL: user.photoURL || "",
+        street: "",
+        city: "",
+        zipCode: "",
+      };
+
+      setFormData(initialData);
+      setDisplayData(initialData);
+
       const fetchUserData = async () => {
         try {
           const userDoc = await getDoc(doc(db, "users", user.uid));
           if (userDoc.exists()) {
             const userData = userDoc.data();
-            setStreet(userData.address?.street || "");
-            setCity(userData.address?.city || "");
-            setZipCode(userData.address?.zipCode || "");
+            const addressData = {
+              street: userData.address?.street || "",
+              city: userData.address?.city || "",
+              zipCode: userData.address?.zipCode || "",
+            };
+            setFormData((prev) => ({ ...prev, ...addressData }));
+            setDisplayData((prev) => ({ ...prev, ...addressData }));
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -37,160 +61,175 @@ export default function Profile() {
       };
 
       fetchUserData();
+      setLoading(false);
     }
   }, [user]);
+
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleUpdate = (field) => {
+    setDisplayData((prev) => ({ ...prev, [field]: formData[field] }));
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 2000);
+  };
 
   const onSubmit = async () => {
     try {
       await updateProfile(user, {
-        displayName: displayName,
-        photoURL: photoURL,
+        displayName: displayData.displayName,
+        photoURL: displayData.photoURL,
       });
+
       await setDoc(doc(db, "users", user?.uid), {
         address: {
-          city: city,
-          street: street,
-          zipCode: zipCode,
+          city: displayData.city,
+          street: displayData.street,
+          zipCode: displayData.zipCode,
         },
       });
+
       setSuccess(true);
+      setTimeout(() => setSuccess(false), 2000);
     } catch (error) {
       setError(error.message);
     }
   };
+  if (loading) {
+    return <LoadingSpinner loading={loading} />;
+  }
   return (
-    <div className="container mx-auto px-4 py-8">
-      {updateError && <span className=" text-red-500">{updateError}</span>}
-
-      <div className="bg-white rounded-lg shadow-lg p-6 dark:bg-gray-800">
-        <h1 className="text-2xl font-bold mb-6">User Profile</h1>
-
-        {user ? (
-          <div className="space-y-4">
-            <div className="border-b pb-4">
-              <p className="text-gray-600 ">Email</p>
-              <p className="font-medium ">{user.email}</p>
-            </div>
-            <div className="border-b pb-4 flex justify-between items-center">
-              <div className="flex gap-4">
-                <p className="text-gray-600 ">Displayname: </p>
-                <p className="text-gray-200 ">
-                  {user?.displayName || updatedName || displayName}
-                </p>
-              </div>
-              <div className="flex-col">
-                <label className="text-nowrap py-2 px-2 justify-center flex">
-                  DisplayName
-                </label>
-                <input
-                  type="text"
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  className="font-medium text-black border rounded p-2 w-full"
-                  placeholder={user.displayName}
-                />
-              </div>
-            </div>
-            <div className="border-b pb-4 flex justify-between items-center">
-              <div className="flex gap-4 text-center items-center">
-                <p className="text-gray-600 ">PhotoURL: </p>
-                <p className="text-gray-200 ">
-                  {(user?.photoURL || photoURL) && (
-                    <img
-                      className="w-[80px] h-[80px]"
-                      src={user?.photoURL || photoURL}
-                    ></img>
-                  )}{" "}
-                </p>
-              </div>
-              <div className="flex-col">
-                <label className="text-nowrap py-2 px-2 justify-center flex">
-                  PhotoURL
-                </label>
-                <input
-                  type="text"
-                  onChange={(e) => setPhotoURL(e.target.value)}
-                  className="font-medium text-black border rounded p-2 w-full"
-                  placeholder={user.photoURL}
-                />
-              </div>
-            </div>
-
-            <div className="border-b pb-4 flex justify-between items-center">
-              <div className="flex gap-4 text-center items-center">
-                <p className="text-gray-600 ">Street: </p>
-                <p className="text-gray-200 ">{street}</p>
-              </div>
-              <div className="flex-col">
-                <label className="text-nowrap py-2 px-2 justify-center flex">
-                  Street
-                </label>
-                <input
-                  type="text"
-                  onChange={(e) => setStreet(e.target.value)}
-                  className="font-medium text-black border rounded p-2 w-full"
-                  placeholder={street}
-                />
-              </div>
-            </div>
-            <div className="border-b pb-4 flex justify-between items-center">
-              <div className="flex gap-4 text-center items-center">
-                <p className="text-gray-600 ">City: </p>
-                <p className="text-gray-200 ">{city}</p>
-              </div>
-              <div className="flex-col">
-                <label className="text-nowrap py-2 px-2 justify-center flex">
-                  City
-                </label>
-                <input
-                  type="text"
-                  onChange={(e) => setCity(e.target.value)}
-                  className="font-medium text-black border rounded p-2 w-full"
-                  placeholder={city}
-                />
-              </div>
-            </div>
-            <div className="border-b pb-4 flex justify-between items-center">
-              <div className="flex gap-4 text-center items-center">
-                <p className="text-gray-600 ">Zipcode: </p>
-                <p className="text-gray-200 ">{zipCode}</p>
-              </div>
-              <div className="flex-col">
-                <label className="text-nowrap py-2 px-2 justify-center flex">
-                  Zip Code
-                </label>
-                <input
-                  type="text"
-                  onChange={(e) => setZipCode(e.target.value)}
-                  className="font-medium text-black border rounded p-2 w-full"
-                  placeholder={zipCode}
-                />
-              </div>
-            </div>
-            <div className="border-b pb-4 flex gap-4 py-2">
-              <p className="text-gray-600 ">Email Verified</p>
-
-              {user.emailVerified ? (
-                <p className="font-medium text-green-500">Yes</p>
-              ) : (
-                <p className="font-medium text-red-500">No</p>
-              )}
-            </div>
-            <button
-              onClick={onSubmit}
-              className="bg-blue-500 text-white rounded px-4 py-2 transition-all duration-200 hover:bg-white hover:text-blue-500 font-bold"
-            >
-              Submit
-            </button>
-            {success && (
-              <span className="text-green-600 px-4">
-                profile updated successfully!
-              </span>
-            )}
-          </div>
-        ) : (
-          <p>Loading user data...</p>
-        )}
+    <div className="p-4">
+      <div className="bg-white p-4 shadow text-black mb-4">
+        <h2 className="text-xl font-bold mb-4">Email</h2>
+        <div className="flex flex-col gap-4 mb-4">
+          <p className="font-medium">{user.email}</p>
+        </div>
       </div>
+
+      <div className="bg-white p-4 shadow text-black mb-4">
+        <h2 className="text-xl font-bold mb-4">Displayname</h2>
+        <div className="flex flex-col gap-4 mb-4">
+          <p className="font-medium">{displayData.displayName}</p>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              onChange={(e) => handleInputChange("displayName", e.target.value)}
+              className="font-medium text-black border rounded p-2 w-full"
+              placeholder={displayData.displayName}
+              value={formData.displayName}
+            />
+            <button
+              onClick={() => handleUpdate("displayName")}
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+              update displayname
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white p-4 shadow text-black mb-4">
+        <h2 className="text-xl font-bold mb-4">Photo URL</h2>
+        <div className="flex flex-col gap-4 mb-4">
+          <p className="font-medium">
+            {displayData.photoURL && (
+              <img
+                className="w-[80px] h-[80px]"
+                src={displayData.photoURL}
+                alt="Profile"
+              />
+            )}
+          </p>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              onChange={(e) => handleInputChange("photoURL", e.target.value)}
+              className="font-medium text-black border rounded p-2 w-full"
+              placeholder={displayData.photoURL}
+              value={formData.photoURL}
+            />
+            <button
+              onClick={() => handleUpdate("photoURL")}
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+              update photo
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white p-4 shadow text-black mb-4">
+        <div className="grid grid-cols-3 text-center">
+          <h2 className="text-xl font-bold mb-4">Street</h2>
+          <h2 className="text-xl font-bold mb-4">Zipcode</h2>
+          <h2 className="text-xl font-bold mb-4">City</h2>
+        </div>
+        <div className="flex flex-col gap-4 mb-4 text-center">
+          <div className="grid grid-cols-3">
+            <p className="font-medium">{displayData.street}</p>
+            <p className="font-medium">{displayData.zipCode}</p>
+            <p className="font-medium">{displayData.city}</p>
+          </div>
+          <div className="grid grid-cols-3">
+            <input
+              type="text"
+              onChange={(e) => handleInputChange("street", e.target.value)}
+              className="font-medium text-black border rounded p-2 w-full"
+              placeholder={displayData.street}
+              value={formData.street}
+            />
+            <input
+              type="text"
+              onChange={(e) => handleInputChange("zipCode", e.target.value)}
+              className="font-medium text-black border rounded p-2 w-full"
+              placeholder={displayData.zipCode}
+              value={formData.zipCode}
+            />
+            <input
+              type="text"
+              onChange={(e) => handleInputChange("city", e.target.value)}
+              className="font-medium text-black border rounded p-2 w-full"
+              placeholder={displayData.city}
+              value={formData.city}
+            />
+          </div>
+          <button
+            onClick={() => {
+              handleUpdate("street");
+              handleUpdate("zipCode");
+              handleUpdate("city");
+            }}
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          >
+            update address
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-white p-4 shadow text-black mb-4">
+        <h2 className="text-xl font-bold mb-4">Email Verified</h2>
+        <div className="flex flex-col gap-4 mb-4">
+          {user.emailVerified ? (
+            <p className="font-medium text-green-500">Yes</p>
+          ) : (
+            <p className="font-medium text-red-500">No</p>
+          )}
+        </div>
+      </div>
+
+      <button
+        onClick={onSubmit}
+        className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+      >
+        Save All Changes
+      </button>
+
+      {updateError && <span className="text-red-500">{updateError}</span>}
+      {success && (
+        <span className="text-green-600 px-4">Update successful!</span>
+      )}
     </div>
   );
 }

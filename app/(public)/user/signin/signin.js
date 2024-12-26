@@ -57,7 +57,7 @@ export default function SignIn() {
   return (
     <section className="bg-gray-1 py-20 dark:bg-dark lg:py-[120px]">
       <div className="container mx-auto">
-        \{errorMessage && <AttentionAlert3 text={errorMessage} />}
+        {errorMessage && <AttentionAlert3 text={errorMessage} />}
         <div className="-mx-4 flex flex-wrap">
           <div className="w-full px-4">
             <div className="relative mx-auto max-w-[525px] overflow-hidden rounded-lg bg-white px-10 py-16 text-center dark:bg-dark-2 sm:px-12 md:px-[60px]">

@@ -1,5 +1,6 @@
 "use client";
 import ChoiceBtn from "@/components/ChoiceBtn";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import {
   collection,
   doc,
@@ -10,13 +11,14 @@ import {
 import { useEffect, useState } from "react";
 export default function EditPairs() {
   const [pairs, setPairs] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   // Stan dla formularza dodawania nowej pary
   const [newKey, setNewKey] = useState("");
   const [newValue, setNewValue] = useState("");
 
   useEffect(() => {
     fetchPairs();
+
     // console.log(pairs);
   }, []);
 
@@ -33,6 +35,7 @@ export default function EditPairs() {
         quizDoc.data().questions.pairs
       ) {
         setPairs(quizDoc.data().questions.pairs);
+        setLoading(false);
       }
     } catch (err) {
       console.error("Error fetching pairs:", err);
@@ -67,7 +70,9 @@ export default function EditPairs() {
     const newPairs = pairs.filter((_, idx) => idx !== index);
     setPairs(newPairs);
   };
-
+  if (loading) {
+    return <LoadingSpinner loading={loading} />;
+  }
   return (
     <div className="p-4">
       {/* Formularz dodawania nowej pary */}

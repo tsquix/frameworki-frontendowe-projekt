@@ -7,47 +7,31 @@ import { useAuth } from "@/app/lib/AuthContext";
 export default function Navbar() {
   const { user } = useAuth();
   return (
-    <nav className="fixed left-0 top-0 h-screen w-1/5 bg-gray-600 shadow-lg dark:bg-dark-2">
-      <div className="flex h-full flex-col justify-between p-6">
-        <nav id="navbarCollapse">
-          <ul className="flex flex-col space-y-4">
-            <ListItem NavLink="/">Home</ListItem>
-            <ListItem NavLink="/user/">Profile</ListItem>
-            <ListItem NavLink="/quizzes/">Quizzes</ListItem>
-            <ListItem NavLink="/quizzes/edit/">Edit quizz</ListItem>
-          </ul>
-        </nav>
-
-        <div className="flex flex-col space-y-4">
-          {!user && (
-            <>
-              <Link href="/user/signin">
-                <p className="flex py-2 text-base font-medium text-dark hover:text-primary dark:text-white lg:inline-flex bg-slate-500 w-full shadow-lg rounded-md px-2  justify-center hover:bg-white hover:text-black hover:font-bold transition-all duration-200">
-                  Sign in
-                </p>
-              </Link>
-              <Link href="/user/register">
-                <p className="flex py-2 text-base font-medium text-dark hover:text-primary dark:text-white lg:inline-flex bg-slate-500 w-full shadow-lg rounded-md px-2 justify-center hover:bg-white hover:text-black hover:font-bold transition-all duration-200">
-                  Sign Up
-                </p>
-              </Link>
-            </>
-          )}
-          {user && <LogoutForm />}
-        </div>
+    <div className="flex w-full bg-slate-100 py-8 px-8 shadow-lg mb-16">
+      <div className=" gap-8 flex w-full justify-">
+        <ListItem NavLink="/">Home</ListItem>
+        <ListItem NavLink="/user/">Profile</ListItem>
+        <ListItem NavLink="/quizzes/">Quizzes</ListItem>
+        <ListItem NavLink="/quizzes/edit/">Edit quizz</ListItem>
       </div>
-    </nav>
+      <div className="gap-4 flex justify-end ">{user && <LogoutForm />}</div>
+
+      {!user && (
+        <div className="flex gap-4">
+          <ListItem NavLink="/user/signin">Sign in</ListItem>
+          <ListItem NavLink="/user/register">Sign Up</ListItem>
+        </div>
+      )}
+    </div>
   );
 }
 
 const ListItem = ({ children, NavLink }) => {
   return (
-    <li>
-      <Link href={NavLink}>
-        <p className="flex py-2 text-base font-medium text-dark hover:text-primary text-white lg:inline-flex bg-slate-500 w-full shadow-lg rounded-md px-2 hover:bg-white hover:text-black hover:font-bold transition-all duration-200">
-          {children}
-        </p>
-      </Link>
-    </li>
+    <Link href={NavLink}>
+      <p className="bg-slate-100 rounded-md px-4 py-2 shadow-xl text-black border-2 border-black text-nowrap">
+        {children}
+      </p>
+    </Link>
   );
 };

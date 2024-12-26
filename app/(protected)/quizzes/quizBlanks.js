@@ -1,7 +1,16 @@
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { useAuth } from "@/app/lib/AuthContext";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 export default function QuizBlanks() {
+  const { user } = useAuth();
   const [blanks, setBlanks] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [selectedAnswer, setSelectedAnswer] = useState("");
@@ -15,8 +24,12 @@ export default function QuizBlanks() {
   const [isCorrect, setIsCorrect] = useState(false);
   const [isCorrect2, setIsCorrect2] = useState(false);
   const [questionParts, setQuestionParts] = useState(["", "", ""]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetchPairs();
+    if (user) {
+      const userUID = user.uid;
+      fetchPairs(userUID);
+    }
     // console.log();
   }, []);
 
@@ -25,40 +38,26 @@ export default function QuizBlanks() {
       splitQuestionContent(questions.content);
     }
   }, [questions]);
-  // const sliceQuestionContent = () => {
-  //   if (!questions.content) return;
-  //   let z = questions.content;
-  //   const firstIndex = z.indexOf("[1]");
-  //   const secIndex = z.indexOf("[2]");
-
-  //   const newX1 = z.slice(0, firstIndex);
-  //   const newX2 = z.slice(firstIndex + 3, secIndex);
-  //   const newX3 = z.slice(secIndex + 3, z.length);
-
-  //   setX1(newX1);
-  //   setX2(newX2);
-  //   setX3(newX3);
-  // };
 
   const splitQuestionContent = (content) => {
     const parts = content.split(/\[1\]|\[2\]/);
     setQuestionParts(parts);
   };
 
-  const fetchPairs = async () => {
+  const fetchPairs = async (userUID) => {
     try {
       const db = getFirestore();
-      const quizCollection = collection(db, "quiz");
-      const querySnapshot = await getDocs(quizCollection);
-      const quizDoc = querySnapshot.docs[0];
+      const quizDoc = doc(db, "quiz", userUID);
+      const docSnapshot = await getDoc(quizDoc);
 
       if (
-        quizDoc &&
-        quizDoc.data().questions &&
-        quizDoc.data().questions.blanks
+        docSnapshot.exists() &&
+        docSnapshot.data().questions &&
+        docSnapshot.data().questions.blanks
       ) {
-        setBlanks(quizDoc.data().questions.blanks.blanksContent);
-        setQuestions(quizDoc.data().questions.blanks);
+        setBlanks(docSnapshot.data().questions.blanks.blanksContent);
+        setQuestions(docSnapshot.data().questions.blanks);
+        setLoading(false);
       }
     } catch (err) {
       console.error("Error fetching options:", err);
@@ -92,14 +91,15 @@ export default function QuizBlanks() {
     setSelectedAnswer("");
     setSelectedAnswer2("");
   };
-
+  if (loading) {
+    return <LoadingSpinner loading={loading} />;
+  }
   return (
-    //TODO jak obie odpowiedzi sa zle to obie powinny sie swiecic na czerwono
     <div className="p-4">
       {/* Question dropdown */}
       <h2 className="text-2xl font-bold mb-4">Choose correct answers</h2>
       <span className="font-bold">Score: {score}/1</span>
-      <h2 className="my-8">Fill in blanks </h2>
+      <h2 className="mb-8">Fill in blanks </h2>
       <div className="flex mt-4 items-center">
         <p className="text-white px-2">{questionParts[0]}</p>
         <select
@@ -107,7 +107,8 @@ export default function QuizBlanks() {
           className={`text-black px-4 py-2  ${
             isCorrect
               ? "bg-green-400"
-              : isCorrect2 && !isCorrect
+              : (isCorrect2 && !isCorrect) ||
+                (!isCorrect && !isCorrect2 && !isFirstSubmit)
               ? "bg-red-400"
               : "bg-white"
           }`}
@@ -125,7 +126,8 @@ export default function QuizBlanks() {
           className={`text-black px-4 py-2  ${
             isCorrect2
               ? "bg-green-400"
-              : isCorrect && !isCorrect2
+              : (!isCorrect2 && isCorrect) ||
+                (!isCorrect && !isCorrect2 && !isFirstSubmit)
               ? "bg-red-400"
               : "bg-white"
           }`}

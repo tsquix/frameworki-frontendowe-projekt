@@ -6,10 +6,14 @@ import {
   updateDoc,
   collection,
   getDocs,
+  getDoc,
 } from "firebase/firestore";
 import ChoiceBtn from "@/components/ChoiceBtn";
+import { useAuth } from "@/app/lib/AuthContext";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const QuizSingle = () => {
+  const { user } = useAuth();
   const [answerType, setAnswerType] = useState("text");
   const [shuffledOptions, setShuffledOptions] = useState([]);
   const [options, setOptions] = useState([]);
@@ -18,35 +22,37 @@ const QuizSingle = () => {
   const [score, setScore] = useState(0);
   const [isCorrect, setIsCorrect] = useState("");
   const [isFirstSubmit, setIsFirstSubmit] = useState(true);
-
+  const [loading, setLoading] = useState(true);
   // Stan dla formularza dodawania nowej pary
   const [newKey, setNewKey] = useState("");
   const [newValue, setNewValue] = useState("");
-  //TODO fix loop
-  useEffect(() => {
-    fetchPairs();
 
+  useEffect(() => {
+    if (user) {
+      const userUID = user.uid;
+      fetchPairs(userUID);
+    }
     // console.log(questions.correctAnswer.includes(selectedOption));
-    console.log(options);
+    // console.log(options);
   }, []);
 
-  const fetchPairs = async () => {
+  const fetchPairs = async (userUID) => {
     try {
       const db = getFirestore();
-      const quizCollection = collection(db, "quiz");
-      const querySnapshot = await getDocs(quizCollection);
-      const quizDoc = querySnapshot.docs[0];
+      const quizDoc = doc(db, "quiz", userUID);
+      const docSnapshot = await getDoc(quizDoc);
 
       if (
-        quizDoc &&
-        quizDoc.data().questions &&
-        quizDoc.data().questions.singleChoice
+        docSnapshot.exists() &&
+        docSnapshot.data().questions &&
+        docSnapshot.data().questions.singleChoice
       ) {
-        setOptions(quizDoc.data().questions.singleChoice[0].options);
-        setQuestions(quizDoc.data().questions.singleChoice[0]);
+        setOptions(docSnapshot.data().questions.singleChoice[0].options);
+        setQuestions(docSnapshot.data().questions.singleChoice[0]);
+        setLoading(false);
       }
     } catch (err) {
-      console.error("Error fetching pairs:", err);
+      console.error("Error fetching options:", err);
     }
   };
 
@@ -83,6 +89,10 @@ const QuizSingle = () => {
   }, []);
   // const textOption = options.map((option) => option.type == "text");
   // console.log("xd", textOption);
+  if (loading) {
+    return <LoadingSpinner loading={loading} />;
+  }
+
   if (answerType === "") {
     return (
       <div className="p-4">
@@ -207,6 +217,7 @@ const QuizSingle = () => {
                     : ""
                 } shadow`}
               >
+                <h1>{option.value}</h1>
                 <img src={option.imgSrc} alt="" className="h-[260px] w-full" />
                 {/* <button
               // onClick={() => removePair(index)}
