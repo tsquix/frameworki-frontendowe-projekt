@@ -53,7 +53,7 @@ export default function Page() {
     return (
       <div>
         <h1 className="text-xl flex justify-center pb-4">Choose quiz</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 mb-6 justify-items-center text-nowrap md:flex md:gap-0 gap-6 mx-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 mb-6 justify-center text-nowrap md:flex md:gap-0 gap-6 mx-12">
           <ChoiceBtn
             text="Match Pairs"
             stateName={setQuiz}

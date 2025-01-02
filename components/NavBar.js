@@ -10,7 +10,9 @@ export default function Navbar() {
   const closeMobileMenu = () => setNavMobileActive(false);
   return (
     <div className="relative">
-      {/* Desktop Navbar */}
+      {navMobileActive && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out"></div>
+      )}
       <div className="flex w-full bg-slate-100 py-8 px-8 shadow-lg mb-16 justify-end">
         <div className="gap-8 hidden md:flex w-full">
           <ListItem NavLink="/" onClick={closeMobileMenu}>
@@ -35,8 +37,7 @@ export default function Navbar() {
             <ListItem NavLink="/user/register">Sign Up</ListItem>
           </div>
         )}
-        {/* Mobile Menu Button */}
-        <div className="gap-4 md:hidden flex">
+        <div className="gap-4 md:hidden flex z-40">
           <button onClick={() => setNavMobileActive(!navMobileActive)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

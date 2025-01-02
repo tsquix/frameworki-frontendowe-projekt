@@ -77,24 +77,24 @@ export default function EditPairs() {
     <div className="p-4">
       {/* Formularz dodawania nowej pary */}
       <div className="mb-6 bg-white p-4 rounded-lg shadow text-black">
-        <div className="flex gap-4 mb-4">
+        <div className="flex-col md:flex-row flex gap-4 mb-4">
           <input
             type="text"
             value={newKey}
             onChange={(e) => setNewKey(e.target.value)}
-            placeholder="Enter key (e.g. Capital of France)"
+            placeholder="Enter key (e.g. Sahara)"
             className="flex-1 p-2 border rounded"
           />
           <input
             type="text"
             value={newValue}
             onChange={(e) => setNewValue(e.target.value)}
-            placeholder="Enter value (e.g. Paris)"
+            placeholder="Enter value (e.g. Largest desert in the world)"
             className="flex-1 p-2 border rounded"
           />
           <button
             onClick={addPair}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 "
           >
             Add Pair
           </button>
@@ -107,7 +107,7 @@ export default function EditPairs() {
           pairs.map((pair, index) => (
             <div
               key={index}
-              className="flex items-center gap-4 bg-white p-4 rounded-lg shadow text-black"
+              className="flex sm:flex-row flex-col items-center gap-4 bg-white p-4 rounded-lg shadow text-black"
             >
               <span className="flex-1 font-semibold">{pair.key}</span>
               <span className="flex-1">{pair.value}</span>

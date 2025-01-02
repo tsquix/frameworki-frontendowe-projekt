@@ -178,7 +178,7 @@ export default function EditBlanks() {
       <div className="bg-white p-4 shadow text-black mb-4">
         <h2 className="text-xl font-bold mb-4">Edit Question title</h2>
         <div className="flex flex-col gap-4 mb-4">
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row gap-2">
             <input
               type="text"
               onChange={(e) =>
@@ -220,7 +220,6 @@ export default function EditBlanks() {
               onClick={updateTitle}
               className="bg-green-500 text-white px-8 py-2 text-nowrap rounded hover:bg-green-600"
             >
-              {" "}
               Update title
             </button>
           </div>
@@ -231,7 +230,7 @@ export default function EditBlanks() {
           {" "}
           <h2 className="text-xl font-bold mb-4">Title preview</h2>
         </div>
-        <div className="flex mt-4 items-center">
+        <div className="flex flex-col sm:flex-row mt-4 items-center">
           <p className="text-black px-2">{questionParts[0]}</p>
           <select className="text-black px-4 py-2">
             <option value="" />
@@ -258,7 +257,7 @@ export default function EditBlanks() {
           <h2 className="text-xl font-bold mb-4">
             Edit options / correct answers
           </h2>
-          <div className="flex gap-2 ">
+          <div className="flex flex-col md:flex-row gap-2 ">
             <select
               value={newOption.id}
               onChange={(e) =>

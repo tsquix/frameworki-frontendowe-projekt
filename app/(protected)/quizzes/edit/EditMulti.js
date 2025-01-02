@@ -193,7 +193,7 @@ export default function EditChoice({ type }) {
             className="w-full p-2 border rounded"
           />
 
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row gap-2">
             <input
               type="text"
               value={questionEdit.correctAnswer}
@@ -265,7 +265,7 @@ export default function EditChoice({ type }) {
       {/* Add Option Form */}
       <div className="bg-white p-4 shadow text-black mb-4">
         <h2 className="text-xl font-bold mb-4">Add New Option</h2>
-        <div className="flex gap-4 mb-4">
+        <div className="flex  flex-col md:flex-row gap-4 mb-4">
           <select
             value={newOption.type}
             onChange={(e) =>
@@ -317,8 +317,8 @@ export default function EditChoice({ type }) {
                 key={index}
                 className="flex items-center gap-4 p-4 border rounded"
               >
-                <span className="flex-1">Type: {option.type}</span>
-                <span className="flex-1">Value: {option.value}</span>
+                <span className="flex-1">{option.type}</span>
+                <span className="flex-1">{option.value}</span>
                 {option.imgSrc && (
                   <div className="flex-1">
                     <img
