@@ -104,7 +104,7 @@ export default function Profile() {
       <div className="bg-white p-4 shadow text-black mb-4">
         <h2 className="text-xl font-bold mb-4">Email</h2>
         <div className="flex flex-col gap-4 mb-4">
-          <p className="font-medium">{user.email}</p>
+          <p className="font-medium">{user?.email}</p>
         </div>
       </div>
 
@@ -124,7 +124,7 @@ export default function Profile() {
               onClick={() => handleUpdate("displayName")}
               className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
             >
-              update displayname
+              update name
             </button>
           </div>
         </div>
@@ -211,7 +211,7 @@ export default function Profile() {
       <div className="bg-white p-4 shadow text-black mb-4">
         <h2 className="text-xl font-bold mb-4">Email Verified</h2>
         <div className="flex flex-col gap-4 mb-4">
-          {user.emailVerified ? (
+          {user?.emailVerified ? (
             <p className="font-medium text-green-500">Yes</p>
           ) : (
             <p className="font-medium text-red-500">No</p>

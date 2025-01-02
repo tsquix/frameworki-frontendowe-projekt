@@ -91,7 +91,7 @@ export default function QuizPairs() {
         </span>
       </div>
 
-      <div className="grid grid-cols-2 gap-8 text-black">
+      <div className="grid  grid-cols-1 sm:grid-cols-2 gap-8 text-black">
         {/* Lewa kolumna - klucze */}
         <div className="space-y-4">
           {pairs.map((pair, index) => (

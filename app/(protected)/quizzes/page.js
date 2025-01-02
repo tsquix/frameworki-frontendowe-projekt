@@ -53,18 +53,17 @@ export default function Page() {
     return (
       <div>
         <h1 className="text-xl flex justify-center pb-4">Choose quiz</h1>
-        <div className="flex mb-4 justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 mb-6 justify-items-center text-nowrap md:flex md:gap-0 gap-6 mx-12">
           <ChoiceBtn
             text="Match Pairs"
             stateName={setQuiz}
             stateValue="pairs"
           />
-          <button
-            onClick={() => setQuiz("single-choice")}
-            className="bg-white px-8 mx-4 text-black py-2 rounded-lg"
-          >
-            Single-choice
-          </button>
+          <ChoiceBtn
+            text="Single-choice"
+            stateName={setQuiz}
+            stateValue="single-choice"
+          />
           <ChoiceBtn text="Blanks" stateName={setQuiz} stateValue="blanks" />
           <ChoiceBtn
             text="Multi-choice"

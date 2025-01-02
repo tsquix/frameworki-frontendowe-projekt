@@ -122,7 +122,8 @@ export default function QuizMultiple() {
                 setAnswerType("");
                 resetValues();
               }}
-              className="bg-gray-700 opacity-90 rounded-3xl px-2"
+              className="bg-gray-700 opacity-90 rounded-2xl px-2 
+            "
             >
               Switch answer type
             </button>
@@ -182,7 +183,7 @@ export default function QuizMultiple() {
             <h2 className="text-2xl font-bold mb-4">Choose correct answers</h2>
             <button
               onClick={() => setAnswerType("")}
-              className="bg-gray-900 opacity-90 rounded-3xl px-2"
+              className="bg-gray-700 opacity-90 rounded-2xl px-2 "
             >
               Switch answer type
             </button>
@@ -195,7 +196,6 @@ export default function QuizMultiple() {
               .map((option, index) => (
                 <div
                   onClick={() => handleKeyClick(option)}
-                  //TODO zrobic partialy correct zeby zaznaczona poprawna odpowiedz byla na zielono a zla czerwono
                   className={`flex items-center gap-4 m-4 shadow text-black p-4 rounded-lg cursor-pointer transition-colors h-[300px]
                 ${
                   selectedOptions.includes(option.value) && isCorrect
@@ -219,7 +219,6 @@ export default function QuizMultiple() {
                     alt=""
                     className="h-[260px] w-full"
                   />
-                  {/* Upewnij się, że używasz właściwego klucza */}
                 </div>
               ))}
         </div>

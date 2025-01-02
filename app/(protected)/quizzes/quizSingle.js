@@ -95,8 +95,8 @@ const QuizSingle = () => {
 
   if (answerType === "") {
     return (
-      <div className="p-4">
-        <h2 className="text-2xl mb-4 ">choose answer type:</h2>
+      <div className="p-4 mt-8 ">
+        <h2 className="text-2xl mb-4">choose answer type:</h2>
         <button
           onClick={() => setAnswerType("text")}
           className="bg-white px-8 mx-4 text-black py-2 rounded-lg"
@@ -122,7 +122,7 @@ const QuizSingle = () => {
               setAnswerType("");
               resetValues();
             }}
-            className="bg-gray-700 opacity-90 rounded-3xl px-2"
+            className="bg-gray-700 opacity-90 rounded-2xl px-2 "
           >
             Switch answer type
           </button>
@@ -188,7 +188,7 @@ const QuizSingle = () => {
               setAnswerType("");
               resetValues();
             }}
-            className="bg-gray-700 opacity-90 rounded-3xl px-2"
+            className="bg-gray-700 opacity-90 rounded-2xl px-2"
           >
             Switch answer type
           </button>
@@ -217,7 +217,6 @@ const QuizSingle = () => {
                     : ""
                 } shadow`}
               >
-                <h1>{option.value}</h1>
                 <img src={option.imgSrc} alt="" className="h-[260px] w-full" />
                 {/* <button
               // onClick={() => removePair(index)}

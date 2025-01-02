@@ -12,7 +12,7 @@ export default function LogoutForm() {
 
   return (
     <button
-      className="bg-slate-100 rounded-md px-4 py-2 shadow-xl text-black border-2 border-black text-nowrap"
+      className="bg-slate-100 rounded-md px-4 py-2 shadow-xl text-black border-2 border-black text-nowrap hover:text-white hover:bg-black transition-all duration-150"
       onClick={onSubmit}
     >
       Signout

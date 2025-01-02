@@ -100,7 +100,7 @@ export default function QuizBlanks() {
       <h2 className="text-2xl font-bold mb-4">Choose correct answers</h2>
       <span className="font-bold">Score: {score}/1</span>
       <h2 className="mb-8">Fill in blanks </h2>
-      <div className="flex mt-4 items-center">
+      <div className="flex mt-4 items-center flex-col gap-4 md:gap-0 md:flex-row">
         <p className="text-white px-2">{questionParts[0]}</p>
         <select
           value={selectedAnswer}
@@ -141,7 +141,7 @@ export default function QuizBlanks() {
               </option>
             ))}
         </select>
-        <p className="text-white px-2">{questionParts[3]}</p>
+        <p className="text-white px-2">{questionParts[2]}</p>
       </div>
       <div className="flex justify-center mt-12 gap-4">
         <button
