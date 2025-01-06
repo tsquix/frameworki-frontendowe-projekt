@@ -19,7 +19,6 @@ export default function Page() {
   const [quiz, setQuiz] = useState("");
   const [hasQuiz, setHasQuiz] = useState(false);
   const [loading, setLoading] = useState(true);
-
   const { user } = useAuth();
 
   useEffect(() => {
@@ -88,7 +87,10 @@ export default function Page() {
         <Link href="/quizzes/create">
           <button
             className="py-2 px-4 bg-slate-100 rounded-lg text-black"
-            onClick={() => setHasQuiz(true)}
+            onClick={() => {
+              setHasQuiz(true);
+              setLoading(true);
+            }}
           >
             Create new quiz
           </button>

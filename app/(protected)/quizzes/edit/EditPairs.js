@@ -52,7 +52,11 @@ export default function EditPairs() {
         "questions.pairs": pairs,
       });
 
-      alert("Pairs saved successfully!");
+      Swal.fire({
+        title: "Pairs saving",
+        text: "Pairs saved succesfully!",
+        icon: "success",
+      });
     } catch (err) {
       console.error("Error saving pairs:", err);
       alert("Error saving pairs");
@@ -125,7 +129,7 @@ export default function EditPairs() {
           onClick={saveToFirebase}
           className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
         >
-          Save Pairs
+          Save All changes
         </button>
       </div>
     </div>

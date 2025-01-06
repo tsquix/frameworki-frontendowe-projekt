@@ -10,14 +10,18 @@ import {
   setDoc,
 } from "firebase/firestore";
 import Link from "next/link";
+import LoadingSpinner from "@/components/LoadingSpinner";
 export default function Page() {
   const [hasQuiz, setHasQuiz] = useState(false);
   const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
   // const uid = user.uid;
   useEffect(() => {
     if (user) {
       const userUID = user.uid;
       //   fetchQuiz(userUID);
+
+      setLoading(false);
     }
   });
   const createNewQuiz = async (userUID) => {
@@ -147,23 +151,35 @@ export default function Page() {
           },
         };
 
-        // Set the document with the userUID as its ID
         await setDoc(quizRef, initialQuizData);
+
         console.log("Quiz created successfully for user:", userUID);
       }
     } catch (error) {
       console.error("Error creating quiz:", error);
     }
   };
+  if (loading) {
+    return <LoadingSpinner loading={loading} />;
+  }
   return (
     <>
-      <div className="px-2 py-2 flex  bg-slate-100 text-black">
-        <Link href="/">
-          <button className="" onClick={() => createNewQuiz(user.uid)}>
-            {" "}
-            Click here to create a quiz !
-          </button>
-        </Link>
+      <div className=" mx-12">
+        <h1 className="text-xl flex justify-center pb-4 mb-8">
+          To help you start with creating new quizzes we d like to fill your
+          quizzes with sample data
+        </h1>
+
+        <div className="flex mb-4 justify-center flex-col items-center">
+          <Link href="/">
+            <button
+              className="py-2 px-4 bg-slate-100 rounded-lg text-black"
+              onClick={() => createNewQuiz(user.uid)}
+            >
+              Fill with sample data
+            </button>
+          </Link>
+        </div>
       </div>
     </>
   );

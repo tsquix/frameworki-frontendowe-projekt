@@ -64,12 +64,20 @@ export default function EditChoice({ type }) {
 
   const addOption = () => {
     if (!newOption.type || !newOption.value) {
-      alert("Type and value are required!");
+      Swal.fire({
+        title: "Missing data",
+        text: "Type and value are required!",
+        icon: "error",
+      });
       return;
     }
 
     if (newOption.type === "image" && !newOption.imgSrc) {
-      alert("Image source is required for image type options!");
+      Swal.fire({
+        title: "Missing image source",
+        text: "Image source is required for image type options!",
+        icon: "error",
+      });
       return;
     }
 
@@ -122,7 +130,11 @@ export default function EditChoice({ type }) {
     }
 
     if (Object.keys(updates).length === 0) {
-      alert("No changes to update!");
+      Swal.fire({
+        title: "No changes",
+        text: "No changes to update",
+        icon: "warning",
+      });
       return;
     }
 
@@ -166,7 +178,11 @@ export default function EditChoice({ type }) {
         [path]: choiceData,
       });
 
-      alert("Changes saved successfully!");
+      Swal.fire({
+        title: "Changes saving",
+        text: "Changes saved succesfully!",
+        icon: "success",
+      });
     } catch (err) {
       console.error("Error saving changes:", err);
       alert("Error saving changes");

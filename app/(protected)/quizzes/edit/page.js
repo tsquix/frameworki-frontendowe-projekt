@@ -44,7 +44,7 @@ export default function Edit() {
     return (
       <>
         <div className="flex justify-between mb-4">
-          <h2 className="text-2xl font-bold mb-4">Edit Pairs</h2>
+          <h2 className="text-2xl font-bold mb-4 mx-2">Edit Pairs</h2>
 
           <ChoiceBtn
             text="Back to quiz choice"
@@ -61,7 +61,7 @@ export default function Edit() {
     return (
       <>
         <div className="flex justify-between mb-4">
-          <h2 className="text-2xl font-bold mb-4">Edit multi Choice</h2>
+          <h2 className="text-2xl font-bold mb-4 mx-2">Edit multi Choice</h2>
 
           <ChoiceBtn
             text="Back to quiz choice"
@@ -78,7 +78,7 @@ export default function Edit() {
     return (
       <>
         <div className="flex justify-between mb-4">
-          <h2 className="text-2xl font-bold mb-4">Edit Single Choice</h2>
+          <h2 className="text-2xl font-bold mb-4 mx-2">Edit Single Choice</h2>
 
           <ChoiceBtn
             text="Back to quiz choice"
@@ -95,7 +95,7 @@ export default function Edit() {
     return (
       <>
         <div className="flex justify-between mb-4">
-          <h2 className="text-2xl font-bold mb-4">Edit blanks</h2>
+          <h2 className="text-2xl font-bold mb-4 mx-2">Edit blanks</h2>
 
           <ChoiceBtn
             text="Back to quiz choice"

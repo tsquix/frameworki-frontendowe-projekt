@@ -122,7 +122,7 @@ const QuizSingle = () => {
               setAnswerType("");
               resetValues();
             }}
-            className="bg-gray-700 opacity-90 rounded-2xl px-2 "
+            className="bg-gray-700 opacity-90 rounded-2xl px-2 sm:px-4 lg:px-8  "
           >
             Switch answer type
           </button>
@@ -188,7 +188,7 @@ const QuizSingle = () => {
               setAnswerType("");
               resetValues();
             }}
-            className="bg-gray-700 opacity-90 rounded-2xl px-2"
+            className="bg-gray-700 opacity-90 rounded-2xl px-2 sm:px-4 lg:px-8 "
           >
             Switch answer type
           </button>

@@ -23,7 +23,7 @@ export default function VerifyEmail() {
   return (
     <>
       <Navbar />
-      <div className="ml-[20%]">
+      <div className="">
         <div className=" flex flex-col items-center justify-center h-screen mx-auto ">
           <h1 className="text-2xl bg-slate-800 px-2 py-2 rounded-lg font-bold">
             Email <span className="text-red-500">not verified</span>. Verify

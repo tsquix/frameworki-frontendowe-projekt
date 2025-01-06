@@ -122,7 +122,7 @@ export default function QuizMultiple() {
                 setAnswerType("");
                 resetValues();
               }}
-              className="bg-gray-700 opacity-90 rounded-2xl px-2 
+              className="bg-gray-700 opacity-90 rounded-2xl px-2 sm:px-4 lg:px-8 
             "
             >
               Switch answer type
@@ -183,7 +183,7 @@ export default function QuizMultiple() {
             <h2 className="text-2xl font-bold mb-4">Choose correct answers</h2>
             <button
               onClick={() => setAnswerType("")}
-              className="bg-gray-700 opacity-90 rounded-2xl px-2 "
+              className="bg-gray-700 opacity-90 rounded-2xl px-2 sm:px-4 lg:px-8  "
             >
               Switch answer type
             </button>

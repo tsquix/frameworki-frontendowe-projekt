@@ -8,9 +8,10 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 export default function EditBlanks() {
   const [questionParts, setQuestionParts] = useState(["", "", ""]);
-  const [questionString, setQuestionString] = useState("");
+
   const [blanks, setBlanks] = useState([]);
   const [titleEdit, setTitleEdit] = useState([]);
   const [optionType, setOptionType] = useState("");
@@ -164,7 +165,11 @@ export default function EditBlanks() {
         "questions.blanks": blanksData,
       });
 
-      alert("blanks saved successfully!");
+      Swal.fire({
+        title: "Blanks saving",
+        text: "Blanks saved succesfully!",
+        icon: "success",
+      });
     } catch (err) {
       console.error("Error saving blanks:", err);
       alert("Error saving blanks");

@@ -35,7 +35,6 @@ export default function QuizPairs() {
     setScore(0);
   }, [pairs]);
 
-  //TODO fetch pairs dla kazdego osobny quiz daje, zrobic dla wszystkich innych to samo
   const fetchPairs = async (userUID) => {
     try {
       const db = getFirestore();
@@ -102,7 +101,7 @@ export default function QuizPairs() {
               }
               className={`p-4 rounded-lg cursor-pointer transition-colors ${
                 matchedPairs.includes(pair)
-                  ? "bg-green-200"
+                  ? "bg-green-300"
                   : selectedPair === pair
                   ? "bg-blue-200"
                   : "bg-white hover:bg-gray-100"
@@ -121,7 +120,7 @@ export default function QuizPairs() {
               onClick={() => handleValueClick(value)}
               className={`p-4 rounded-lg cursor-pointer transition-colors ${
                 pairs.find((p) => p.value === value && matchedPairs.includes(p))
-                  ? "bg-green-200"
+                  ? "bg-green-300"
                   : "bg-white hover:bg-gray-100"
               } shadow`}
             >
